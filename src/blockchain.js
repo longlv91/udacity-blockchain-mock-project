@@ -64,7 +64,16 @@ class Blockchain {
     _addBlock(block) {
         let self = this;
         return new Promise(async (resolve, reject) => {
-           
+            if (self.height !== -1) {
+                const prevBlock = await self.getBlockByHeight(self.height);
+                block.previousBlockHash = prevBlock.hash;
+            }
+            self.height ++;
+            block.time = (new Date()).getTime();
+            block.height = self.height;
+            await block.generateHash();
+            self.chain.push(block);
+            resolve(block);
         });
     }
 
@@ -115,7 +124,8 @@ class Blockchain {
     getBlockByHash(hash) {
         let self = this;
         return new Promise((resolve, reject) => {
-           
+           const block = seft.find(p => p.hash === hash);
+           resolve(block);
         });
     }
 

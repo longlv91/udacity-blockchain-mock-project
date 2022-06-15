@@ -63,12 +63,44 @@ class Block {
      *     or Reject with an error.
      */
     getBData() {
-        // Getting the encoded data saved in the Block
-        // Decoding the data to retrieve the JSON representation of the object
-        // Parse the data to an object to be retrieve.
+        let self = this;
+        return new Promise((resolve, reject) => {
+            // Getting the encoded data saved in the Block
+            const encodedHex = self.body;
+            // Decoding the data to retrieve the JSON representation of the object
+            let body = hex2ascii(encodedHex);
+            // Parse the data to an object to be retrieve.
+            body = JSON.parse(body);
+            // Resolve with the data if the object isn't the Genesis block
+            if (body.data !== 'Genesis Block') {
+                resolve(body.data);
+            } else {
+                reject(new Error("the object is the Genesis block"))
+            }
+        });
+    }
 
-        // Resolve with the data if the object isn't the Genesis block
-
+    /**
+     * Step 1. Implement `generateHash()`
+     * method that return the `self` block with the hash.
+     * 
+     * Create a Promise that resolve with `self` after you create 
+     * the hash of the object and assigned to the hash property `self.hash = ...`
+     */
+    generateHash() {
+        // Use this to create a temporary reference of the class object
+        let self = this;
+        //Implement your code here
+        return new Promise(function(resolve, reject) {
+            // do a thing, possibly async, then…
+            if (self.body) {
+                self.hash = SHA256(JSON.stringify(self)).toString()
+                resolve(self);
+            }
+            else {
+                reject(Error("It broke"));
+            }
+        });
     }
 
 }
