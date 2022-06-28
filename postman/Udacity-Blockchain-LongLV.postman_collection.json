@@ -1,0 +1,182 @@
+{
+	"info": {
+		"_postman_id": "f056f342-949e-4b1f-b265-dc26ef73d4fb",
+		"name": "Udacity-Blockchain-LongLV",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10912600"
+	},
+	"item": [
+		{
+			"name": "getBlockByHeight",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/block/0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"block",
+						"0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "requestOwnership",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"address\": \"1Q9AZrCnbXA5BhRhxwYeZyWKFU3hHrtqog\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/requestOwnership",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"requestOwnership"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "submitStar",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"address\": \"1Q9AZrCnbXA5BhRhxwYeZyWKFU3hHrtqog\",\r\n    \"message\": \"1Q9AZrCnbXA5BhRhxwYeZyWKFU3hHrtqog:1656427258:starRegistry\",\r\n    \"signature\": \"H7UH65OG98B1W4nqZYiNjVhHf8qY/ZpO6moYj/vrvlHsfyxIdtPZYmjc8vaUyBo9f3moL+oHeVLoNBiHhwHHtd0=\",\r\n    \"star\": {\r\n        \"dec\": \"68 51' 56.9\",\r\n        \"ra\": \"16h 29m 1.0s\",\r\n        \"story\": \"Testing the story 1\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/submitstar",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"submitstar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getStarsByOwner",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/blocks/1Q9AZrCnbXA5BhRhxwYeZyWKFU3hHrtqog",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"blocks",
+						"1Q9AZrCnbXA5BhRhxwYeZyWKFU3hHrtqog"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getBlockByHash",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/block/hash/4fdc95cb1c5a3637758d836eafc66c05e17a8a18eaad6b9379385ec0d03b3d8b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"block",
+						"hash",
+						"4fdc95cb1c5a3637758d836eafc66c05e17a8a18eaad6b9379385ec0d03b3d8b"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "requestValidation",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/requestValidation",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"requestValidation"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -87,7 +87,7 @@ class Blockchain {
      */
     requestMessageOwnershipVerification(address) {
         return new Promise((resolve) => {
-            
+            resolve(`${address}:${new Date().getTime().toString().slice(0,-3)}:starRegistry`)
         });
     }
 
@@ -111,6 +111,15 @@ class Blockchain {
     submitStar(address, message, signature, star) {
         let self = this;
         return new Promise(async (resolve, reject) => {
+            let messageTime = parseInt(message.split(':')[1]);
+            let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
+            if ((currentTime - messageTime) < (5 * 60 * 1000)) {
+                if (bitcoinMessage.verify(message, address, signature)) {
+                    let block = new BlockClass.Block({data: { message, star, address, signature}});
+                    await self._addBlock(block);
+                    resolve(block);
+                }
+            }
             
         });
     }
@@ -124,7 +133,7 @@ class Blockchain {
     getBlockByHash(hash) {
         let self = this;
         return new Promise((resolve, reject) => {
-           const block = seft.find(p => p.hash === hash);
+           const block = self.chain.find(p => p.hash === hash);
            resolve(block);
         });
     }
@@ -155,8 +164,19 @@ class Blockchain {
     getStarsByWalletAddress (address) {
         let self = this;
         let stars = [];
-        return new Promise((resolve, reject) => {
-            
+        return new Promise(async (resolve, reject) => {
+            for (const block of self.chain) {
+                if (block.previousBlockHash) {
+                    const data = await block.getBData();
+                    if (data.address === address) {
+                        stars.push(data.star);
+                    }
+                }
+            }
+            resolve(stars.map(star => ({
+                owner: address,
+                star
+            })));
         });
     }
 
@@ -170,7 +190,31 @@ class Blockchain {
         let self = this;
         let errorLog = [];
         return new Promise(async (resolve, reject) => {
-            
+            for(let i = 0; i < self.chain.length; i++) {
+                const isValidBlock = await self.chain[i].validate();
+                if (!isValidBlock) {
+                    errorLog.push({
+                        blockId: self.chain[i].height,
+                        hash: self.chain[i].hash,
+                        error: 'Invalid block hash'
+                    })
+                }
+                if (self.chain[0].previousBlockHash) {
+                    errorLog.push({
+                        blockId: self.chain[i].height,
+                        hash: self.chain[i].hash,
+                        error: 'This is invalid chain'
+                    })
+                }
+                if (i > 0 && self.chain[i].previousBlockHash !== self.chain[i-1].previousBlockHash) {
+                    errorLog.push({
+                        blockId: self.chain[i].height,
+                        hash: self.chain[i].hash,
+                        error: 'Block is not belong to the chain'
+                    })
+                }
+                resolve(errorLog);
+            }
         });
     }
 
