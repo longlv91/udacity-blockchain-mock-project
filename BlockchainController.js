@@ -12,11 +12,11 @@ class BlockchainController {
         this.blockchain = blockchainObj;
         // All the endpoints methods needs to be called in the constructor to initialize the route.
         this.getBlockByHeight();
-        this.requestValidation();
         this.requestOwnership();
         this.submitStar();
         this.getBlockByHash();
         this.getStarsByOwner();
+        this.validateChain();
     }
 
     // Enpoint to Get a Block by Height (GET Endpoint)
@@ -38,20 +38,20 @@ class BlockchainController {
     }
 
     // Endpoint that allows user to request validation the block chain (GET Endpoint)
-    requestValidation() {
-        this.app.get("/requestValidation", async (req, res) => {
-            const message = await this.blockchain.validateChain();
-            if(message){
-                return res.status(200).json(message);
+    validateChain() {
+        this.app.get("/validateChain", async (req, res) => {
+            const errors = await this.blockchain.validateChain();
+            if(errors.length === 0) {
+                return res.status(200).json('The chain is valid');
             } else {
-                return res.status(500).send("An error happened!");
+                return res.status(500).send('The chain contains at least an invalid block');
             }
         });
     }
 
     // Endpoint that allows user to request Ownership of a Wallet address (POST Endpoint)
     requestOwnership() {
-        this.app.post("/requestOwnership", async (req, res) => {
+        this.app.post("/requestValidation", async (req, res) => {
             if(req.body.address) {
                 const address = req.body.address;
                 const message = await this.blockchain.requestMessageOwnershipVerification(address);
@@ -82,7 +82,7 @@ class BlockchainController {
                         return res.status(500).send("An error happened!");
                     }
                 } catch (error) {
-                    return res.status(500).send(error);
+                    return res.status(500).send(error.message);
                 }
             } else {
                 return res.status(500).send("Check the Body Parameter!");

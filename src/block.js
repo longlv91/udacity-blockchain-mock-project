@@ -74,8 +74,8 @@ class Block {
             // Parse the data to an object to be retrieve.
             body = JSON.parse(body);
             // Resolve with the data if the object isn't the Genesis block
-            if (body.data !== 'Genesis Block') {
-                resolve(body.data);
+            if (body !== 'Genesis Block') {
+                resolve(body);
             } else {
                 reject(new Error("the object is the Genesis block"))
             }

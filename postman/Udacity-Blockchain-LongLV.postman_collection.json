@@ -41,14 +41,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8000/requestOwnership",
+					"raw": "http://localhost:8000/requestValidation",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8000",
 					"path": [
-						"requestOwnership"
+						"requestValidation"
 					]
 				}
 			},
@@ -148,7 +148,7 @@
 			"response": []
 		},
 		{
-			"name": "requestValidation",
+			"name": "validateChain",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -165,14 +165,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8000/requestValidation",
+					"raw": "http://localhost:8000/validateChain",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8000",
 					"path": [
-						"requestValidation"
+						"validateChain"
 					]
 				}
 			},

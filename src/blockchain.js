@@ -35,7 +35,7 @@ class Blockchain {
      */
     async initializeChain() {
         if( this.height === -1){
-            let block = new BlockClass.Block({data: 'Genesis Block'});
+            let block = new BlockClass.Block('Genesis Block');
             await this._addBlock(block);
         }
     }
@@ -68,12 +68,18 @@ class Blockchain {
                 const prevBlock = await self.getBlockByHeight(self.height);
                 block.previousBlockHash = prevBlock.hash;
             }
-            self.height ++;
+            
             block.time = (new Date()).getTime();
-            block.height = self.height;
-            await block.generateHash();
-            self.chain.push(block);
-            resolve(block);
+            const errorLogs = await self.validateChain();
+            if (errorLogs.length === 0) {
+                self.height ++;
+                block.height = self.height;
+                await block.generateHash();
+                self.chain.push(block);
+                resolve(block);
+            } else {
+                reject(errorLogs);
+            }
         });
     }
 
@@ -113,14 +119,17 @@ class Blockchain {
         return new Promise(async (resolve, reject) => {
             let messageTime = parseInt(message.split(':')[1]);
             let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
-            if ((currentTime - messageTime) < (5 * 60 * 1000)) {
+            if ((currentTime - messageTime) < (5 * 60)) {
                 if (bitcoinMessage.verify(message, address, signature)) {
-                    let block = new BlockClass.Block({data: { message, star, address, signature}});
+                    let block = new BlockClass.Block({ message, star, address, signature });
                     await self._addBlock(block);
                     resolve(block);
+                } else {
+                    reject(new Error(`Invalid message for ${address}`))
                 }
+            } else {
+                reject(new Error(`Message for ${address} is late.`))
             }
-            
         });
     }
 
@@ -206,15 +215,15 @@ class Blockchain {
                         error: 'This is invalid chain'
                     })
                 }
-                if (i > 0 && self.chain[i].previousBlockHash !== self.chain[i-1].previousBlockHash) {
+                if (i > 0 && self.chain[i].previousBlockHash !== self.chain[i-1].hash) {
                     errorLog.push({
                         blockId: self.chain[i].height,
                         hash: self.chain[i].hash,
                         error: 'Block is not belong to the chain'
                     })
                 }
-                resolve(errorLog);
             }
+            resolve(errorLog);
         });
     }
 
