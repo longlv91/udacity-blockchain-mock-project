@@ -39,19 +39,9 @@ class Block {
         let self = this;
         return new Promise((resolve, reject) => {
             // Save in auxiliary variable the current block hash
-            const currentBlockHash = self.hash;
-            self.hash = null;                               
-            // Recalculate the hash of the Block
-            const newHash = SHA256(JSON.stringify(self)).toString();
-            self.hash = currentBlockHash;
-            // Comparing if the hashes changed
-            if (newHash !== currentBlockHash) {
-                // Returning the Block is not valid
-                resolve(false)
-            } else {
-                // Returning the Block is valid
-                resolve(true);
-            }
+            let clonedBlock = {...self, hash:null};
+            let newHash = SHA256(JSON.stringify(clonedBlock)).toString();
+            resolve(self.hash === newHash);
         });
     }
 
